@@ -12,9 +12,9 @@ Copyright (C) Novell, Inc, Xamarin Inc and Contributors. www.mono-project.com
 	Suspend:       preemptive
 	GC:            sgen (concurrent by default)
 
-unity-mono-revision = 94d31e01206c8d38249990ec648a3d3b95854cf9
+unity-mono-revision = 6faf82d72779aef03206c652924402bcffc2421d
 
-unity-mono-build-scripts-revision = 94d31e01206c8d38249990ec648a3d3b95854cf9
+unity-mono-build-scripts-revision = 6faf82d72779aef03206c652924402bcffc2421d
 
-Fri 10/30/2020 
+Thu 11/30/2023 
 
