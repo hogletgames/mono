@@ -5,7 +5,8 @@ name: Test Mono Il2cpp-deps [Manual] [Existing-Branch]
 
 agent:
   type: Unity::VM
-  image: platform-foundation/linux-ubuntu18.04-il2cpp-bokken:v0.0.6-1294580
+  image: platform-foundation/linux-ubuntu-18.04-mono-bokken:latest
+  #image: platform-foundation/linux-ubuntu18.04-il2cpp-bokken:v0.0.6-1294580
   flavor: b1.xlarge
 
 variables:
