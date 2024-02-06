@@ -15,7 +15,7 @@ variables:
 
 # On linux-ubuntu-18.04-mono-bokken YAMATO_SOURCE_DIR is:
 # /home/bokken/build/output/Unity-Technologies/mono
-# and we start in there
+# For every command we start in there afresh
 
 commands:
 
@@ -45,6 +45,15 @@ commands:
         echo "ls -lha"
         ls -lhs
 
+        echo "cd .."
+        cd ..
+
+        echo "pwd"
+        pwd
+
+        echo "ls -lha"
+        ls -lhs
+
         echo "cd prtools"
         cd prtools
 
@@ -56,7 +65,7 @@ commands:
 
         echo "git fetch"
         git fetch
-        
+
         echo "git checkout add-TestMonoIl2cppDeps-option"
         git checkout add-TestMonoIl2cppDeps-option
 
@@ -73,6 +82,24 @@ commands:
         echo "ls -lha"
         ls -lhs
 
+        echo "cd .."
+        cd ..
+
+        echo "pwd"
+        pwd
+
+        echo "ls -lha"
+        ls -lhs
+
+        echo "cd prtools"
+        cd prtools
+
+        echo "pwd"
+        pwd
+
+        echo "ls -lha"
+        ls -lhs
+
         echo "dotnet build -o ./prtools_build"
         dotnet build -o ./prtools_build
 
@@ -81,22 +108,22 @@ commands:
         # Step 2 - Clone unity/unity
 
         echo "git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/unity.git unity"
-        git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/unity.git unity
+        #git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/unity.git unity
 
     - command: |
 
         # Step 3 - Clone unity/il2cpp
 
         echo "git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/il2cpp.git il2cpp"
-        git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/il2cpp.git il2cpp
+        #git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/il2cpp.git il2cpp
 
     - command: |
 
         # Step 4 - run PRTools (--)
 
         echo "cd $YAMATO_SOURCE_DIR/unity"
-        cd $YAMATO_SOURCE_DIR/unity
+        #cd $YAMATO_SOURCE_DIR/unity
 
-        dotnet run --project $YAMATO_SOURCE_DIR/PRTools/PRTools.csproj --test-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --custom-il2cpp-repo-path=$YAMATO_SOURCE_DIR/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack --no-push
+        #dotnet run --project $YAMATO_SOURCE_DIR/PRTools/PRTools.csproj --test-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --custom-il2cpp-repo-path=$YAMATO_SOURCE_DIR/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack --no-push
 
 timeout: 2
