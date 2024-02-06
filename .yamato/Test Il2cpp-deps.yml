@@ -33,7 +33,7 @@ commands:
         pwd
 
         echo "git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools"
-        git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools il2cpp
+        git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools
 
     - command: |
 
