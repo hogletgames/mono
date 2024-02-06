@@ -13,16 +13,46 @@ variables:
   MONO_REV: "latest" # TODO we're not using this ATM...
   BACKPORT_BRANCH: "2021.3" 
 
-# YAMATO_SOURCE_DIR is /home/bokken/build/output/unity/prtools/ and that is where we start
+# On linux-ubuntu-18.04-mono-bokken YAMATO_SOURCE_DIR is:
+# /home/bokken/build/output/Unity-Technologies/mono
+# and we start in there
+
 commands:
 
     - command: |
 
-        # Step 0 - Checkout test branch of PRTools - TODO REMOVE THIS STEP PRTOOLS CHANGES LAND IN MAIN
+        # Step 1 - Clone prtools
 
-        # We should already be here, but just to make sure:
-        echo "cd $YAMATO_SOURCE_DIR"
-        cd $YAMATO_SOURCE_DIR
+        echo "pwd"
+        pwd
+
+        echo "cd .."
+        cd ..
+
+        echo "pwd"
+        pwd
+
+        echo "git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools"
+        git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools il2cpp
+
+    - command: |
+
+        # Step 2 - Checkout PRTools branch (not really needed if it's 'main')
+
+        echo "pwd"
+        pwd
+
+        echo "ls -lha"
+        ls -lhs
+
+        echo "cd prtools"
+        cd prtools
+
+        echo "pwd"
+        pwd
+
+        echo "ls -lha"
+        ls -lhs
 
         echo "git fetch"
         git fetch
@@ -30,9 +60,18 @@ commands:
         echo "git checkout add-TestMonoIl2cppDeps-option"
         git checkout add-TestMonoIl2cppDeps-option
 
+        echo "git pull"
+        git pull
+
     - command: |
 
-        # Step 1 - Build PRTools 
+        # Step 3 - Build PRTools
+
+        echo "pwd"
+        pwd
+
+        echo "ls -lha"
+        ls -lhs
 
         echo "dotnet build -o ./prtools_build"
         dotnet build -o ./prtools_build
