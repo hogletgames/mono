@@ -20,8 +20,12 @@ variables:
 commands:
 
     - command: |
+    
+        echo "Try to list env vars with SET..."
+        SET
 
-        # Step 1 - Clone prtools
+        echo "cd UNITY_SOURCE_PRTOOLS_DIR"
+        cd %UNITY_SOURCE_PRTOOLS_DIR%
 
         echo "echo %CD%"
         echo %CD%
