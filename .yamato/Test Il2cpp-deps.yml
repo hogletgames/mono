@@ -26,11 +26,17 @@ commands:
         echo "pwd"
         pwd
 
+        echo "ls -lha"
+        ls -lhs
+
         echo "cd .."
         cd ..
 
         echo "pwd"
         pwd
+
+        echo "ls -lha"
+        ls -lhs
 
         #echo "git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools"
         #git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools
