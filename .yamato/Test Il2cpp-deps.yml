@@ -5,8 +5,8 @@ name: Test Mono Il2cpp-deps [Manual] [Existing-Branch]
 
 agent:
   type: Unity::VM
-  image: platform-foundation/linux-ubuntu18.04-il2cpp-bokken:v0.0.6-1294580
-  flavor: b1.xlarge
+  image: platform-foundation/windows-vs2019-prtools-bokken:latest
+  flavor: b1.xlarge 
 
 variables:
   MONO_REV: "latest" # TODO we're not using this ATM...
