@@ -20,7 +20,7 @@ variables:
 commands:
 
     - command: |
-    
+
         echo "Try to list env vars with SET..."
         SET
 
