@@ -12,7 +12,7 @@ variables:
   MONO_REV: "latest" # TODO we're not using this ATM...
   BACKPORT_BRANCH: "2021.3" 
 
-# YAMATO_SOURCE_DIR=C:\build\output\Unity-Technologies\mono (mono repo checkout)
+# YAMATO_SOURCE_DIR=C:\build\output\Unity-Technologies\mono (mono repo checkout) - commands start in here
 # YAMATO_WORK_DIR=C:\build\output
 # UNITY_SOURCE_PRTOOLS_DIR=C:\buildslave\unity\build
 # PRTOOLS_BUILD_DIR=C:\buildslave\unity
@@ -38,17 +38,17 @@ commands:
         git checkout add-TestMonoIl2cppDeps-option
 
     # Step 2 - clone unity/unity into %PRTOOLS_BUILD_DIR%\unity (C:\buildslave\unity\unity)
-    - command: |
+    # - command: |
 
-        %CD%
-        DIR
+        # %CD%
+        # DIR
 
-        cd %PRTOOLS_BUILD_DIR%
+        # cd %PRTOOLS_BUILD_DIR%
 
-        %CD%
-        DIR
+        # %CD%
+        # DIR
 
-        git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/unity.git unity
+        # git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/unity.git unity
 
     # Step 3 - clone unity/il2cpp into %PRTOOLS_BUILD_DIR%\il2cpp (C:\buildslave\unity\il2cpp)
     - command: |
@@ -68,7 +68,7 @@ commands:
 
         cd %UNITY_SOURCE_PRTOOLS_DIR%
         git config --global core.longpaths true
-        cmd /v /c dotnet run --project $YAMATO_WORK_DIR/prtools/PRTools/PRTools.csproj --test-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --custom-il2cpp-repo-path=%PRTOOLS_BUILD_DIR%/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack --no-push
+        cmd /v /c dotnet run --project $YAMATO_WORK_DIR/prtools/PRTools.csproj --test-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --custom-il2cpp-repo-path=%PRTOOLS_BUILD_DIR%/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack --no-push
         if NOT %errorlevel% == 0 (
           echo "PRTools failed"
           EXIT /B %errorlevel%
