@@ -5,8 +5,7 @@ name: Test Mono Il2cpp-deps [Manual] [Existing-Branch]
 
 agent:
   type: Unity::VM
-  image: platform-foundation/linux-ubuntu-18.04-mono-bokken:latest
-  #image: platform-foundation/linux-ubuntu18.04-il2cpp-bokken:v0.0.6-1294580
+  image: platform-foundation/linux-ubuntu18.04-il2cpp-bokken:v0.0.6-1294580
   flavor: b1.xlarge
 
 variables:
@@ -16,7 +15,8 @@ variables:
 # On linux-ubuntu-18.04-mono-bokken YAMATO_SOURCE_DIR is:
 # /home/bokken/build/output/Unity-Technologies/mono
 # For every command we start in there afresh
-
+# On linux-ubuntu18.04-il2cpp-bokken YAMATO_SOURCE_DIR is:
+# /home/bokken/build/output/unity/prtools/ and that is where we start
 commands:
 
     - command: |
@@ -32,8 +32,8 @@ commands:
         echo "pwd"
         pwd
 
-        echo "git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools"
-        git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools
+        #echo "git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools"
+        #git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools
 
     - command: |
 
@@ -45,23 +45,23 @@ commands:
         echo "ls -lha"
         ls -lhs
 
-        echo "cd .."
-        cd ..
+        #echo "cd .."
+        #cd ..
 
-        echo "pwd"
-        pwd
+        #echo "pwd"
+        #pwd
 
-        echo "ls -lha"
-        ls -lhs
+        #echo "ls -lha"
+        #ls -lhs
 
-        echo "cd prtools"
-        cd prtools
+        #echo "cd prtools"
+        #cd prtools
 
-        echo "pwd"
-        pwd
+        #echo "pwd"
+        #pwd
 
-        echo "ls -lha"
-        ls -lhs
+        #echo "ls -lha"
+        #ls -lhs
 
         echo "git fetch"
         git fetch
@@ -82,6 +82,37 @@ commands:
         echo "ls -lha"
         ls -lhs
 
+        #echo "cd .."
+        #cd ..
+
+        #echo "pwd"
+        #pwd
+
+        #echo "ls -lha"
+        #ls -lhs
+
+        #echo "cd prtools"
+        #cd prtools
+
+        #echo "pwd"
+        #pwd
+
+        #echo "ls -lha"
+        #ls -lhs
+
+        echo "dotnet build -o ./prtools_build"
+        dotnet build -o ./prtools_build
+
+    - command: |
+
+        # Step 2 - Clone unity/unity
+
+        echo "pwd"
+        pwd
+
+        echo "ls -lha"
+        ls -lhs
+
         echo "cd .."
         cd ..
 
@@ -90,22 +121,6 @@ commands:
 
         echo "ls -lha"
         ls -lhs
-
-        echo "cd prtools"
-        cd prtools
-
-        echo "pwd"
-        pwd
-
-        echo "ls -lha"
-        ls -lhs
-
-        echo "dotnet build -o ./prtools_build"
-        dotnet build -o ./prtools_build
-
-    - command: |
-
-        # Step 2 - Clone unity/unity
 
         echo "git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/unity.git unity"
         #git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/unity.git unity
