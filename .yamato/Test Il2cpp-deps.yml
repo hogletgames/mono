@@ -68,7 +68,7 @@ commands:
 
         cd %UNITY_SOURCE_PRTOOLS_DIR%
         git config --global core.longpaths true
-        cmd /v /c dotnet run --project $YAMATO_WORK_DIR/prtools/PRTools.csproj --test-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --custom-il2cpp-repo-path=%PRTOOLS_BUILD_DIR%/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack --no-push
+        cmd /v /c dotnet run --project %YAMATO_WORK_DIR%/prtools/PRTools.csproj --test-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --custom-il2cpp-repo-path=%PRTOOLS_BUILD_DIR%/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack --no-push
         if NOT %errorlevel% == 0 (
           echo "PRTools failed"
           EXIT /B %errorlevel%
