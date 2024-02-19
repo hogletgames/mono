@@ -22,13 +22,14 @@ commands:
     - command: |
 
         git status
+        git log -n 3
 
-        %CD%
+        echo %CD%
         DIR
 
         cd %YAMATO_WORK_DIR%
 
-        %CD%
+        echo %CD%
         DIR
 
         git clone git@github.cds.internal.unity3d.com:unity/prtools.git
@@ -53,12 +54,12 @@ commands:
     # Step 3 - clone unity/il2cpp into %PRTOOLS_BUILD_DIR%\il2cpp (C:\buildslave\unity\il2cpp)
     - command: |
 
-        %CD%
+        echo %CD%
         DIR
 
         cd %PRTOOLS_BUILD_DIR%
 
-        %CD%
+        echo %CD%
         DIR
 
         git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/il2cpp.git il2cpp

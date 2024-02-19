@@ -10,13 +10,18 @@ dependencies:
   - .yamato/Publish To Stevedore.yml
 commands:
   - |
+    git status
+    git log -n 3
+
+    echo %CD%
+    DIR
     cd ../../
     git clone git@github.cds.internal.unity3d.com:unity/prtools.git
     cd prtools
     git checkout main
     cd %UNITY_SOURCE_PRTOOLS_DIR%
     git config --global core.longpaths true
-    cmd /v /c dotnet run --project C:\build\output\prtools\PRTools\PRTools.csproj --update-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --github-api-token=%GITHUB_TOKEN% --yamato-api-token=%YAMATO_TOKEN% --yamato-long-lived-token --yamato-owner-email=%YAMATO_OWNER_EMAIL%       
+    cmd /v /c dotnet run --project C:\build\output\prtools\PRTools\PRTools.csproj --update-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --github-api-token=%GITHUB_TOKEN% --yamato-api-token=%YAMATO_TOKEN% --yamato-long-lived-token --yamato-owner-email=%YAMATO_OWNER_EMAIL% --no-slack --no-push
     if NOT %errorlevel% == 0 (
       echo "PRTools failed"
       EXIT /B %errorlevel%
