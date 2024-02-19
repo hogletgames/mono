@@ -23,20 +23,29 @@ commands:
 
         # Step 1 - Clone prtools
 
-        echo "pwd"
-        pwd
+        echo "echo %CD%"
+        echo %CD%
 
-        echo "ls -lha"
-        ls -lhs
+        echo "DIR"
+        DIR
 
         echo "cd .."
         cd ..
 
-        echo "pwd"
-        pwd
+        echo "echo %CD%"
+        echo %CD%
 
-        echo "ls -lha"
-        ls -lhs
+        echo "DIR"
+        DIR
+        
+        echo "cd .."
+        cd ..
+
+        echo "echo %CD%"
+        echo %CD%
+
+        echo "DIR"
+        DIR
 
         #echo "git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools"
         #git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools
