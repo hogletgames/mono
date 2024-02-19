@@ -12,185 +12,66 @@ variables:
   MONO_REV: "latest" # TODO we're not using this ATM...
   BACKPORT_BRANCH: "2021.3" 
 
-# On linux-ubuntu-18.04-mono-bokken YAMATO_SOURCE_DIR is:
-# /home/bokken/build/output/Unity-Technologies/mono
-# For every command we start in there afresh
-# On linux-ubuntu18.04-il2cpp-bokken YAMATO_SOURCE_DIR is:
-# /home/bokken/build/output/unity/prtools/ and that is where we start
+# YAMATO_SOURCE_DIR=C:\build\output\Unity-Technologies\mono (mono repo checkout)
+# YAMATO_WORK_DIR=C:\build\output
+# UNITY_SOURCE_PRTOOLS_DIR=C:\buildslave\unity\build
+# PRTOOLS_BUILD_DIR=C:\buildslave\unity
 commands:
 
+    # Step 1 - clone PRTools into %YAMATO_WORK_DIR%\prtools (C:\build\output\prtools)
     - command: |
 
-        echo "Try to list env vars with SET..."
-        SET
+        git status
 
-        echo "cd UNITY_SOURCE_PRTOOLS_DIR"
-        cd %UNITY_SOURCE_PRTOOLS_DIR%
-
-        echo "echo %CD%"
-        echo %CD%
-
-        echo "DIR"
+        %CD%
         DIR
 
-        echo "cd .."
-        cd ..
+        cd %YAMATO_WORK_DIR%
 
-        echo "echo %CD%"
-        echo %CD%
-
-        echo "DIR"
-        DIR
-        
-        echo "cd .."
-        cd ..
-
-        echo "echo %CD%"
-        echo %CD%
-
-        echo "DIR"
-        DIR
-
-        cd %YAMATO_SOURCE_DIR%
-        echo "echo %CD%"
-        echo %CD%
-
-        echo "DIR"
-        DIR
-
-        echo "cd .."
-        cd ..
-
-        echo "echo %CD%"
-        echo %CD%
-
-        echo "DIR"
-        DIR
-
-        echo "cd .."
-        cd ..
-
-        echo "echo %CD%"
-        echo %CD%
-
-        echo "DIR"
+        %CD%
         DIR
 
         git clone git@github.cds.internal.unity3d.com:unity/prtools.git
         cd prtools
-        git fetch
+        %CD%
+        DIR
         git checkout add-TestMonoIl2cppDeps-option
 
-        dotnet build -o ./prtools_build
-
-
-        #echo "git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools"
-        #git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools
-
+    # Step 2 - clone unity/unity into %PRTOOLS_BUILD_DIR%\unity (C:\buildslave\unity\unity)
     - command: |
 
-        # Step 2 - Checkout PRTools branch (not really needed if it's 'main')
+        %CD%
+        DIR
 
-        echo "pwd"
-        pwd
+        cd %PRTOOLS_BUILD_DIR%
 
-        echo "ls -lha"
-        ls -lhs
+        %CD%
+        DIR
 
-        #echo "cd .."
-        #cd ..
+        git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/unity.git unity
 
-        #echo "pwd"
-        #pwd
-
-        #echo "ls -lha"
-        #ls -lhs
-
-        #echo "cd prtools"
-        #cd prtools
-
-        #echo "pwd"
-        #pwd
-
-        #echo "ls -lha"
-        #ls -lhs
-
-        echo "git fetch"
-        git fetch
-
-        echo "git checkout add-TestMonoIl2cppDeps-option"
-        git checkout add-TestMonoIl2cppDeps-option
-
-        echo "git pull"
-        git pull
-
+    # Step 3 - clone unity/il2cpp into %PRTOOLS_BUILD_DIR%\il2cpp (C:\buildslave\unity\il2cpp)
     - command: |
 
-        # Step 3 - Build PRTools
+        %CD%
+        DIR
 
-        echo "pwd"
-        pwd
+        cd %PRTOOLS_BUILD_DIR%
 
-        echo "ls -lha"
-        ls -lhs
+        %CD%
+        DIR
 
-        #echo "cd .."
-        #cd ..
+        git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/il2cpp.git il2cpp
 
-        #echo "pwd"
-        #pwd
-
-        #echo "ls -lha"
-        #ls -lhs
-
-        #echo "cd prtools"
-        #cd prtools
-
-        #echo "pwd"
-        #pwd
-
-        #echo "ls -lha"
-        #ls -lhs
-
-        echo "dotnet build -o ./prtools_build"
-        dotnet build -o ./prtools_build
-
+    # Step 4 - With working dir %UNITY_SOURCE_PRTOOLS_DIR% (C:\buildslave\unity\build) run PRTools in %YAMATO_WORK_DIR%\prtools (C:\build\output\prtools) (--test-mono-il2cpp-deps)
     - command: |
 
-        # Step 2 - Clone unity/unity
-
-        echo "pwd"
-        pwd
-
-        echo "ls -lha"
-        ls -lhs
-
-        echo "cd .."
-        cd ..
-
-        echo "pwd"
-        pwd
-
-        echo "ls -lha"
-        ls -lhs
-
-        echo "git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/unity.git unity"
-        #git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/unity.git unity
-
-    - command: |
-
-        # Step 3 - Clone unity/il2cpp
-
-        echo "git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/il2cpp.git il2cpp"
-        #git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/il2cpp.git il2cpp
-
-    - command: |
-
-        # Step 4 - run PRTools (--)
-
-        echo "cd $YAMATO_SOURCE_DIR/unity"
-        #cd $YAMATO_SOURCE_DIR/unity
-
-        #dotnet run --project $YAMATO_SOURCE_DIR/PRTools/PRTools.csproj --test-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --custom-il2cpp-repo-path=$YAMATO_SOURCE_DIR/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack --no-push
+        cd %UNITY_SOURCE_PRTOOLS_DIR%
+        git config --global core.longpaths true
+        cmd /v /c dotnet run --project $YAMATO_WORK_DIR/prtools/PRTools/PRTools.csproj --test-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --custom-il2cpp-repo-path=%PRTOOLS_BUILD_DIR%/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack --no-push
+        if NOT %errorlevel% == 0 (
+          echo "PRTools failed"
+          EXIT /B %errorlevel%
+        )
 
 timeout: 2
