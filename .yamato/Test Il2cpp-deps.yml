@@ -51,6 +51,39 @@ commands:
         echo "DIR"
         DIR
 
+        cd %YAMATO_SOURCE_DIR%
+        echo "echo %CD%"
+        echo %CD%
+
+        echo "DIR"
+        DIR
+
+        echo "cd .."
+        cd ..
+
+        echo "echo %CD%"
+        echo %CD%
+
+        echo "DIR"
+        DIR
+
+        echo "cd .."
+        cd ..
+
+        echo "echo %CD%"
+        echo %CD%
+
+        echo "DIR"
+        DIR
+
+        git clone git@github.cds.internal.unity3d.com:unity/prtools.git
+        cd prtools
+        git fetch
+        git checkout add-TestMonoIl2cppDeps-option
+
+        dotnet build -o ./prtools_build
+
+
         #echo "git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools"
         #git clone git@github.cds.internal.unity3d.com:unity/prtools.git prtools
 
