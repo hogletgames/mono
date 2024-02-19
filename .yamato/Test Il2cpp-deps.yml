@@ -66,6 +66,9 @@ commands:
     # Step 4 - With working dir %UNITY_SOURCE_PRTOOLS_DIR% (C:\buildslave\unity\build) run PRTools in %YAMATO_WORK_DIR%\prtools (C:\build\output\prtools) (--test-mono-il2cpp-deps)
     - command: |
 
+        DIR %YAMATO_WORK_DIR%
+        DIR %YAMATO_WORK_DIR%/prtools
+
         cd %UNITY_SOURCE_PRTOOLS_DIR%
         git config --global core.longpaths true
         cmd /v /c dotnet run --project %YAMATO_WORK_DIR%/prtools/PRTools.csproj --test-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --custom-il2cpp-repo-path=%PRTOOLS_BUILD_DIR%/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack --no-push
