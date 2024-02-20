@@ -10,7 +10,10 @@ agent:
 
 variables:
   MONO_REV: "latest" # TODO we're not using this ATM...
-  BACKPORT_BRANCH: "2021.3" 
+  BACKPORT_BRANCH: "2021.3"
+
+dependencies:
+  - .yamato/Publish To Stevedore.yml
 
 # YAMATO_SOURCE_DIR=C:\build\output\Unity-Technologies\mono (mono repo checkout) - commands start in here
 # YAMATO_WORK_DIR=C:\build\output
