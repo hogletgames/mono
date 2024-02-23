@@ -20,35 +20,35 @@ dependencies:
 # PRTOOLS_BUILD_DIR=C:\buildslave\unity
 commands:
 
-    # Step 1 - clone PRTools into %YAMATO_WORK_DIR%\prtools (C:\build\output\prtools)
+    # Step 1 - clone PRTools into $env:YAMATO_WORK_DIR\prtools (C:\build\output\prtools)
     - command: |
 
-        cd %YAMATO_WORK_DIR%
+        cd $env:YAMATO_WORK_DIR
 
         git clone git@github.cds.internal.unity3d.com:unity/prtools.git
         cd prtools
         git checkout add-TestMonoIl2cppDeps-option
 
-    # Step 2 - clone unity/il2cpp into %PRTOOLS_BUILD_DIR%\il2cpp (C:\buildslave\unity\il2cpp)
+    # Step 2 - clone unity/il2cpp into $env:PRTOOLS_BUILD_DIR\il2cpp (C:\buildslave\unity\il2cpp)
     - command: |
 
-        cd %PRTOOLS_BUILD_DIR%
+        cd $env:PRTOOLS_BUILD_DIR
 
         git clone --recurse-submodules https://github.cds.internal.unity3d.com/unity/il2cpp.git il2cpp
 
-    # Step 3 - With working dir %UNITY_SOURCE_PRTOOLS_DIR% (C:\buildslave\unity\build) run PRTools from %YAMATO_WORK_DIR%\prtools (C:\build\output\prtools) (--test-mono-il2cpp-deps)
-    # pointing PRTools to the IL2CPP checkout we did above (in %PRTOOLS_BUILD_DIR%\il2cpp (C:\buildslave\unity\il2cpp))
+    # Step 3 - With working dir $env:UNITY_SOURCE_PRTOOLS_DIR (C:\buildslave\unity\build) run PRTools from $env:YAMATO_WORK_DIR\prtools (C:\build\output\prtools) (--test-mono-il2cpp-deps)
+    # pointing PRTools to the IL2CPP checkout we did above (in $env:PRTOOLS_BUILD_DIR\il2cpp (C:\buildslave\unity\il2cpp))
     - command: |
 
-        cd %UNITY_SOURCE_PRTOOLS_DIR%
+        cd $env:UNITY_SOURCE_PRTOOLS_DIR
         git config --global core.longpaths true
-        cmd /v /c dotnet run --project %YAMATO_WORK_DIR%\prtools\PRTools\PRTools.csproj --test-mono-il2cpp-deps=%YAMATO_SOURCE_DIR%/stevedore/artifactid.txt --backport=%BACKPORT_BRANCH% --custom-il2cpp-repo-path=%PRTOOLS_BUILD_DIR%/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack
+        cmd /v /c dotnet run --project $env:YAMATO_WORK_DIR\prtools\PRTools\PRTools.csproj --test-mono-il2cpp-deps=$env:YAMATO_SOURCE_DIR/stevedore/artifactid.txt --backport=$env:BACKPORT_BRANCH --custom-il2cpp-repo-path=$env:PRTOOLS_BUILD_DIR/il2cpp --github-api-token=$IL2CPP_GITHUB_TOKEN --yamato-api-token=$YAMATO_TOKEN --yamato-long-lived-token --no-slack
         if ($LASTEXITCODE -ne 0) { echo "PRTools failed"; exit $LASTEXITCODE }
 
     # Step 4 - Run test on our IL2CPP dir:
     - command: |
 
-        cd %PRTOOLS_BUILD_DIR%/il2cpp
+        cd $env:PRTOOLS_BUILD_DIR/il2cpp
         git status
         git log -n 3
         perl test.pl --build-machine --bee-update-verification ; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
