@@ -45,18 +45,29 @@ commands:
         cmd /v /c dotnet run --project $env:YAMATO_WORK_DIR\prtools\PRTools\PRTools.csproj --test-mono-il2cpp-deps=$env:YAMATO_SOURCE_DIR/stevedore/artifactid.txt --backport=$env:BACKPORT_BRANCH --custom-il2cpp-repo-path=$env:PRTOOLS_BUILD_DIR/il2cpp --github-api-token=$env:IL2CPP_GITHUB_TOKEN --yamato-api-token=$env:YAMATO_TOKEN --yamato-long-lived-token --il2cpp-deps-manifest-file=il2cpp-deps.stevedore --yamato-owner-email=$env:YAMATO_OWNER_EMAIL --no-slack
         if ($LASTEXITCODE -ne 0) { echo "PRTools failed"; exit $LASTEXITCODE }
 
-    # Step 4 - Run test on our IL2CPP dir:
+    # Step 4 - Copy stevedore.conf:
     - command: |
 
         cd $env:PRTOOLS_BUILD_DIR/il2cpp
         echo "Current Git state:"
         git log -1
         Copy-Item ".yamato\files\Slough-Stevedore.conf" -Destination "$Env:USERPROFILE\Stevedore.conf"
-        - command: .\bootstrap.cmd
-          timeout: 0
-          retries: 10
+
+    # Step 5 - Run bootstrap:
+    - command: |
+
+        cd $env:PRTOOLS_BUILD_DIR/il2cpp
+        .\bootstrap.cmd
+
+      timeout: 0
+      retries: 10
+
+    # Step 6 - Run bee-update-verification:
+    - command: |
+
+        cd $env:PRTOOLS_BUILD_DIR/il2cpp
         perl test.pl --build-machine --bee-update-verification ; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-        
+
 artifacts:
     crash_dumps:
         paths:
