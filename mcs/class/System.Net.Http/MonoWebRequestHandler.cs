@@ -39,6 +39,9 @@ using System.Net.Cache;
 using System.Net.Security;
 using System.Linq;
 using System.Reflection;
+#if SECURITY_DEP
+using Mono.Security.Interface;
+#endif
 
 namespace System.Net.Http
 {
@@ -326,7 +329,18 @@ namespace System.Net.Http
 
 		internal virtual HttpWebRequest CreateWebRequest (HttpRequestMessage request)
 		{
-			var wr = new HttpWebRequest (request.RequestUri);
+			HttpWebRequest wr;
+#if SECURITY_DEP
+			if (HttpUtilities.IsSupportedSecureScheme(request.RequestUri.Scheme))
+			{
+				wr = new HttpWebRequest(request.RequestUri, Mono.Net.Security.MonoTlsProviderFactory.GetProviderInternal (), MonoTlsSettings.CopyDefaultSettings ());
+				wr.TlsSettings.ClientCertificateSelectionCallback = (t, lc, rc, ai) => SslOptions.LocalCertificateSelectionCallback (this, t, lc, rc, ai);
+			}
+			else
+#endif
+			{
+				wr = new HttpWebRequest(request.RequestUri);
+			}
 			wr.ThrowOnError = false;
 			wr.AllowWriteStreamBuffering = false;
 
@@ -372,6 +386,8 @@ namespace System.Net.Http
 
 			if (timeout != null)
 				wr.Timeout = (int)timeout.Value.TotalMilliseconds;
+
+			wr.ServerCertificateValidationCallback = SslOptions.RemoteCertificateValidationCallback;
 
 			// Add request headers
 			var headers = wr.Headers;
