@@ -5,8 +5,9 @@ name: Test Mono Il2cpp-deps [Manual] [Existing-Branch]
 
 agent:
   type: Unity::VM
+  image: platform-foundation/il2cpp-windows:v1.0.3-1297112
   #image: platform-foundation/windows-vs2019-prtools-bokken:latest
-  image: platform-foundation/windows-vs2019-il2cpp-bokken:v1.1.6-1025111
+  #image: platform-foundation/windows-vs2019-il2cpp-bokken:v1.1.6-1025111
   flavor: b1.xlarge 
 
 variables:
