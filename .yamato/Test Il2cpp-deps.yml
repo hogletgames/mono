@@ -5,9 +5,7 @@ name: Test Mono Il2cpp-deps [Manual] [Existing-Branch]
 
 agent:
   type: Unity::VM
-  #image: platform-foundation/il2cpp-windows:v1.0.3-1297112
   image: platform-foundation/windows-vs2019-prtools-bokken:latest
-  #image: platform-foundation/windows-vs2019-il2cpp-bokken:v1.1.6-1025111
   flavor: b1.xlarge 
 
 variables:
@@ -15,6 +13,12 @@ variables:
 
 dependencies:
   - .yamato/Publish To Stevedore.yml
+
+triggers:
+  pull_requests:
+    - targets:
+        only:
+          - "unity-2023.3-mbe"
 
 # YAMATO_SOURCE_DIR=C:\build\output\Unity-Technologies\mono (mono repo checkout) - all command steps start in here
 # YAMATO_WORK_DIR=C:\build\output
@@ -40,11 +44,12 @@ commands:
 
     # Step 3 - With working dir $env:UNITY_SOURCE_PRTOOLS_DIR (C:\buildslave\unity\build) run PRTools from $env:YAMATO_WORK_DIR\prtools (C:\build\output\prtools) (--test-mono-il2cpp-deps)
     # pointing PRTools to the IL2CPP checkout we did above (in $env:PRTOOLS_BUILD_DIR\il2cpp (C:\buildslave\unity\il2cpp))
+    # We don't push the IL2CPP test-mono-il2cpp-deps-***** branch this creates, since we're just going to run tests on it 'locally' (see the --bee-update-verification step below)
     - command: |
 
         cd $env:UNITY_SOURCE_PRTOOLS_DIR
         git config --global core.longpaths true
-        cmd /v /c dotnet run --project $env:YAMATO_WORK_DIR\prtools\PRTools\PRTools.csproj --test-mono-il2cpp-deps=$env:YAMATO_SOURCE_DIR/stevedore/artifactid.txt --backport=$env:BACKPORT_BRANCH --custom-il2cpp-repo-path=$env:PRTOOLS_BUILD_DIR/il2cpp --github-api-token=$env:IL2CPP_GITHUB_TOKEN --yamato-api-token=$env:YAMATO_TOKEN --yamato-long-lived-token --il2cpp-deps-manifest-file=il2cpp-deps.stevedore --yamato-owner-email=$env:YAMATO_OWNER_EMAIL --no-slack
+        cmd /v /c dotnet run --project $env:YAMATO_WORK_DIR\prtools\PRTools\PRTools.csproj --test-mono-il2cpp-deps=$env:YAMATO_SOURCE_DIR/stevedore/artifactid.txt --backport=$env:BACKPORT_BRANCH --custom-il2cpp-repo-path=$env:PRTOOLS_BUILD_DIR/il2cpp --github-api-token=$env:IL2CPP_GITHUB_TOKEN --yamato-api-token=$env:YAMATO_TOKEN --yamato-long-lived-token --il2cpp-deps-manifest-file=il2cpp-deps.stevedore --yamato-owner-email=$env:YAMATO_OWNER_EMAIL --no-slack --no-push
         if ($LASTEXITCODE -ne 0) { echo "PRTools failed"; exit $LASTEXITCODE }
 
     # Step 4 - Copy stevedore.conf:
