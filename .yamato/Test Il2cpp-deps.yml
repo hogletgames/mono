@@ -70,22 +70,46 @@ commands:
       timeout: 0
       retries: 10
 
-    # Step 6 - Run bee-update-verification:
+    # Step 6 - Run bee-update-verification - note that the artifacts need to be under the YAMATO_SOURCE_DIR
+    # for the 'artifacts' section to work below, but we're actually running the tests on IL2CPP which is not
+    # under there, so we'll just create folders there and tell test.pl to use it etc.
     - command: |
 
+        if (-not (Test-Path -Path "$env:YAMATO_SOURCE_DIR\build\ReportedArtifacts")) {
+            New-Item -Path "$env:YAMATO_SOURCE_DIR\build\ReportedArtifacts" -ItemType Directory
+        }
+
         cd $env:PRTOOLS_BUILD_DIR/il2cpp
-        perl test.pl --build-machine --bee-update-verification ; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+        perl test.pl --build-machine --bee-update-verification --artifacts_path=$env:YAMATO_SOURCE_DIR/build/ReportedArtifacts/; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+after:
+
+    - command: |
+
+        Move-Item -Path "C:\buildTemp\ReportedArtifact*" -Destination "$env:YAMATO_SOURCE_DIR\build\ReportedArtifacts" -ErrorAction SilentlyContinue
+
+        $licenseLogPath = Join-Path -Path $Env:HOMEDRIVE$Env:HOMEPATH -ChildPath "AppData\Local\Unity\Unity.Licensing.Client.log"
+        if (Test-Path -Path $licenseLogPath) {
+            Move-Item -Path $licenseLogPath -Destination "$env:YAMATO_SOURCE_DIR\build\ReportedArtifacts" -ErrorAction SilentlyContinue
+        }
+
+        if (-not (Test-Path -Path "$env:YAMATO_SOURCE_DIR\build\CrashDumps")) { New-Item -Path "$env:YAMATO_SOURCE_DIR\build\CrashDumps" -ItemType Directory }
+        Copy-Item -Path "C:\CrashDump\*" -Destination "$env:YAMATO_SOURCE_DIR\build\CrashDumps" -Recurse -ErrorAction SilentlyContinue
 
 artifacts:
     crash_dumps:
         paths:
-        - CrashDumps\**
+        - build/CrashDumps/**
     reported_artifacts:
         paths:
-        - build\ReportedArtifacts\**
+        - build/ReportedArtifacts/**
+    test-report-data:
+        paths:
+        - build/ReportedArtifacts/TestReportData.json
     test_output:
         paths:
-        - TestOutput\**
+        - TestOutput/**
 
 interpreter: powershell
 timeout: 2
