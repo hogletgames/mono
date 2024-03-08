@@ -111,4 +111,9 @@ artifacts:
         - TestOutput/**
 
 interpreter: powershell
-timeout: 2
+timeout_options:
+  stages:
+    distribution: 12
+    preparation: 1
+    execution: 3
+    reporting: 1
