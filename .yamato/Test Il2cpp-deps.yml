@@ -85,16 +85,16 @@ after:
             New-Item -Path "$env:YAMATO_SOURCE_DIR\build\ReportedArtifacts" -ItemType Directory
         }
 
-        Move-Item -Path "$env:PRTOOLS_BUILD_DIR\il2cpp\build\ReportedArtifact*" -Destination "$env:YAMATO_SOURCE_DIR\build\ReportedArtifacts" -ErrorAction SilentlyContinue
-        Move-Item -Path "C:\buildTemp\ReportedArtifact*" -Destination "$env:YAMATO_SOURCE_DIR\build\ReportedArtifacts" -ErrorAction SilentlyContinue
+        Copy-Item -Path "$env:PRTOOLS_BUILD_DIR\il2cpp\build\ReportedArtifact*" -Destination "$env:YAMATO_SOURCE_DIR\build\ReportedArtifacts" -ErrorAction SilentlyContinue
 
         $licenseLogPath = Join-Path -Path $Env:HOMEDRIVE$Env:HOMEPATH -ChildPath "AppData\Local\Unity\Unity.Licensing.Client.log"
         if (Test-Path -Path $licenseLogPath) {
-            Move-Item -Path $licenseLogPath -Destination "$env:YAMATO_SOURCE_DIR\build\ReportedArtifacts" -ErrorAction SilentlyContinue
+            Copy-Item -Path $licenseLogPath -Destination "$env:YAMATO_SOURCE_DIR\build\ReportedArtifacts" -ErrorAction SilentlyContinue
         }
 
         if (-not (Test-Path -Path "$env:YAMATO_SOURCE_DIR\build\CrashDumps")) { New-Item -Path "$env:YAMATO_SOURCE_DIR\build\CrashDumps" -ItemType Directory }
-        Copy-Item -Path "C:\CrashDump\*" -Destination "$env:YAMATO_SOURCE_DIR\build\CrashDumps" -Recurse -ErrorAction SilentlyContinue
+        Copy-Item -Path "C:\CrashDump*" -Destination "$env:YAMATO_SOURCE_DIR\build\CrashDumps" -Recurse -ErrorAction SilentlyContinue
+        Copy-Item -Path "$env:PRTOOLS_BUILD_DIR\il2cpp\CrashDump*" -Destination "$env:YAMATO_SOURCE_DIR\build\CrashDumps" -Recurse -ErrorAction SilentlyContinue
 
 artifacts:
     crash_dumps:
@@ -103,12 +103,6 @@ artifacts:
     reported_artifacts:
         paths:
         - build/ReportedArtifacts/**
-    test-report-data:
-        paths:
-        - build/ReportedArtifacts/TestReportData.json
-    test_output:
-        paths:
-        - TestOutput/**
 
 interpreter: powershell
 timeout_options:
