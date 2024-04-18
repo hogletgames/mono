@@ -723,18 +723,35 @@ ReportGenericClasses(MonoGenericClass *genericClass, gpointer user_data)
 {
 	ClassReportContext *context = (ClassReportContext *)user_data;
 
-	if (genericClass->cached_class != NULL)
+	if (genericClass->cached_class != NULL && genericClass->cached_class->inited)
 		context->callback(genericClass->cached_class, context->user_data);
 }
 
-void
-mono_unity_class_for_each(ClassReportFunc callback, void *user_data)
+static void
+ReportImageSetClasses(MonoImageSet * imageSet, void* user_data)
+{
+	if (imageSet->array_cache)
+		g_hash_table_foreach(imageSet->array_cache, ReportHashMapListClasses, user_data);
+
+	if (imageSet->szarray_cache)
+		g_hash_table_foreach(imageSet->szarray_cache, ReportHashMapClasses, user_data);
+
+	if (imageSet->ptr_cache)
+		g_hash_table_foreach(imageSet->ptr_cache, ReportHashMapClasses, user_data);
+}
+
+MONO_API void
+mono_unity_class_for_each(ClassReportFunc callback, void* user_data)
 {
 	ClassReportContext reportContext;
 	reportContext.callback = callback;
 	reportContext.user_data = user_data;
+	// Report all assembly classes and assembly specific arrays
 	mono_domain_assembly_foreach(mono_domain_get(), ReportClassesFromAssembly, &reportContext);
+	// Report all generic classes
 	mono_metadata_generic_class_foreach(ReportGenericClasses, &reportContext);
+	// Report all image set arrays
+	mono_metadata_image_set_foreach(ReportImageSetClasses, &reportContext);
 }
 
 MonoManagedMemorySnapshot* mono_unity_capture_memory_snapshot()
