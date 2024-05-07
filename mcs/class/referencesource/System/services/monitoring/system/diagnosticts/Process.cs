@@ -2138,8 +2138,11 @@ namespace System.Diagnostics {
             SafeFileHandle standardOutputReadPipeHandle = null;
             SafeFileHandle standardErrorReadPipeHandle = null;
             GCHandle environmentHandle = new GCHandle();            
+Console.WriteLine("LLL acquiring s_CreateProcessLock");
             lock (s_CreateProcessLock) {
+Console.WriteLine("LLL acquired s_CreateProcessLock");
             try {
+Console.WriteLine("LLL  0");
                 // set up the streams
                 if (startInfo.RedirectStandardInput || startInfo.RedirectStandardOutput || startInfo.RedirectStandardError) {                        
                     if (startInfo.RedirectStandardInput) {
@@ -2162,6 +2165,7 @@ namespace System.Diagnostics {
     
                     startupInfo.dwFlags = NativeMethods.STARTF_USESTDHANDLES;
                 }
+Console.WriteLine("LLL  1");
     
                 // set up the creation flags paramater
                 int creationFlags = 0;
@@ -2184,12 +2188,14 @@ namespace System.Diagnostics {
                     environmentHandle = GCHandle.Alloc(environmentBytes, GCHandleType.Pinned);
                     environmentPtr = environmentHandle.AddrOfPinnedObject();
                 }
+Console.WriteLine("LLL  2");
 
                 string workingDirectory = startInfo.WorkingDirectory;
                 if (workingDirectory == string.Empty)
                     workingDirectory = Environment.CurrentDirectory;
 
 #if !FEATURE_PAL                    
+Console.WriteLine("LLL  3");
                 if (startInfo.UserName.Length != 0) {                              
                     if (startInfo.Password != null && startInfo.PasswordInClearText != null)
                             throw new ArgumentException(SR.GetString(SR.CantSetDuplicatePassword));
@@ -2209,6 +2215,7 @@ namespace System.Diagnostics {
                             password = Marshal.StringToCoTaskMemUni(String.Empty);
                         }
 
+Console.WriteLine("LLL  4");
                         RuntimeHelpers.PrepareConstrainedRegions();
                         try {} finally {
                            retVal = NativeMethods.CreateProcessWithLogonW(
@@ -2230,6 +2237,7 @@ namespace System.Diagnostics {
                               procSH.InitialSetHandle(processInfo.hProcess);  
                            if ( processInfo.hThread != (IntPtr)0 && processInfo.hThread != (IntPtr)NativeMethods.INVALID_HANDLE_VALUE)
                               threadSH.InitialSetHandle(processInfo.hThread);            
+Console.WriteLine("LLL  5");
                         }
                         if (!retVal){                            
                                 if (errorCode == NativeMethods.ERROR_BAD_EXE_FORMAT || errorCode == NativeMethods.ERROR_EXE_MACHINE_TYPE_MISMATCH) {
@@ -2245,6 +2253,7 @@ namespace System.Diagnostics {
                     }
                     } else {
 #endif // !FEATURE_PAL
+Console.WriteLine("LLL  6");
                     RuntimeHelpers.PrepareConstrainedRegions();
                     try {} finally {
                        retVal = NativeMethods.CreateProcess (
@@ -2276,6 +2285,7 @@ namespace System.Diagnostics {
                 }
 #endif
                 } finally {
+Console.WriteLine("LLL  7");
                 // free environment block
                 if (environmentHandle.IsAllocated) {
                     environmentHandle.Free();   
@@ -2284,6 +2294,7 @@ namespace System.Diagnostics {
                 startupInfo.Dispose();
             }
             }
+Console.WriteLine("LLL freed s_CreateProcessLock");
 
             if (startInfo.RedirectStandardInput) {
                 standardInput = new StreamWriter(new FileStream(standardInputWritePipeHandle, FileAccess.Write, 4096, false), Console.InputEncoding, 4096);
