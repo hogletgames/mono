@@ -2137,12 +2137,17 @@ namespace System.Diagnostics {
             SafeFileHandle standardInputWritePipeHandle = null;
             SafeFileHandle standardOutputReadPipeHandle = null;
             SafeFileHandle standardErrorReadPipeHandle = null;
-            GCHandle environmentHandle = new GCHandle();            
-Console.WriteLine("LLL acquiring s_CreateProcessLock");
+            GCHandle environmentHandle = new GCHandle();
+static long l = 0;
+long unixTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+var fname = $"/Users/bokken/mostyn-log-{unixTimestamp}-{l++}";
+using (var fs = File.Open(fname, FileMode.Create, FileAccess.Write, FileShare.None));
+using (var sw = new StreamWriter(fs));
+sw.WriteLine("LLL acquiring s_CreateProcessLock");
             lock (s_CreateProcessLock) {
-Console.WriteLine("LLL acquired s_CreateProcessLock");
+sw.WriteLine("LLL acquired s_CreateProcessLock");
             try {
-Console.WriteLine("LLL  0");
+sw.WriteLine("LLL  0");
                 // set up the streams
                 if (startInfo.RedirectStandardInput || startInfo.RedirectStandardOutput || startInfo.RedirectStandardError) {                        
                     if (startInfo.RedirectStandardInput) {
@@ -2165,7 +2170,7 @@ Console.WriteLine("LLL  0");
     
                     startupInfo.dwFlags = NativeMethods.STARTF_USESTDHANDLES;
                 }
-Console.WriteLine("LLL  1");
+sw.WriteLine("LLL  1");
     
                 // set up the creation flags paramater
                 int creationFlags = 0;
@@ -2188,14 +2193,14 @@ Console.WriteLine("LLL  1");
                     environmentHandle = GCHandle.Alloc(environmentBytes, GCHandleType.Pinned);
                     environmentPtr = environmentHandle.AddrOfPinnedObject();
                 }
-Console.WriteLine("LLL  2");
+sw.WriteLine("LLL  2");
 
                 string workingDirectory = startInfo.WorkingDirectory;
                 if (workingDirectory == string.Empty)
                     workingDirectory = Environment.CurrentDirectory;
 
 #if !FEATURE_PAL                    
-Console.WriteLine("LLL  3");
+sw.WriteLine("LLL  3");
                 if (startInfo.UserName.Length != 0) {                              
                     if (startInfo.Password != null && startInfo.PasswordInClearText != null)
                             throw new ArgumentException(SR.GetString(SR.CantSetDuplicatePassword));
@@ -2215,7 +2220,7 @@ Console.WriteLine("LLL  3");
                             password = Marshal.StringToCoTaskMemUni(String.Empty);
                         }
 
-Console.WriteLine("LLL  4");
+sw.WriteLine("LLL  4");
                         RuntimeHelpers.PrepareConstrainedRegions();
                         try {} finally {
                            retVal = NativeMethods.CreateProcessWithLogonW(
@@ -2237,7 +2242,7 @@ Console.WriteLine("LLL  4");
                               procSH.InitialSetHandle(processInfo.hProcess);  
                            if ( processInfo.hThread != (IntPtr)0 && processInfo.hThread != (IntPtr)NativeMethods.INVALID_HANDLE_VALUE)
                               threadSH.InitialSetHandle(processInfo.hThread);            
-Console.WriteLine("LLL  5");
+sw.WriteLine("LLL  5");
                         }
                         if (!retVal){                            
                                 if (errorCode == NativeMethods.ERROR_BAD_EXE_FORMAT || errorCode == NativeMethods.ERROR_EXE_MACHINE_TYPE_MISMATCH) {
@@ -2253,7 +2258,7 @@ Console.WriteLine("LLL  5");
                     }
                     } else {
 #endif // !FEATURE_PAL
-Console.WriteLine("LLL  6");
+sw.WriteLine("LLL  6");
                     RuntimeHelpers.PrepareConstrainedRegions();
                     try {} finally {
                        retVal = NativeMethods.CreateProcess (
@@ -2285,7 +2290,7 @@ Console.WriteLine("LLL  6");
                 }
 #endif
                 } finally {
-Console.WriteLine("LLL  7");
+sw.WriteLine("LLL  7");
                 // free environment block
                 if (environmentHandle.IsAllocated) {
                     environmentHandle.Free();   
@@ -2294,7 +2299,7 @@ Console.WriteLine("LLL  7");
                 startupInfo.Dispose();
             }
             }
-Console.WriteLine("LLL freed s_CreateProcessLock");
+sw.WriteLine("LLL freed s_CreateProcessLock");
 
             if (startInfo.RedirectStandardInput) {
                 standardInput = new StreamWriter(new FileStream(standardInputWritePipeHandle, FileAccess.Write, 4096, false), Console.InputEncoding, 4096);
