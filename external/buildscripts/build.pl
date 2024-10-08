@@ -821,7 +821,7 @@ if ($build)
 			$ENV{LDFLAGS} = "-Wl,--wrap,sigaction -L$kraitPatchPath/obj/local/armeabi-v7a -lkrait-signal-handler $ENV{LDFLAGS}";
 		}
 
-		$ENV{LDFLAGS} = "-Wl,--no-undefined -Wl,--gc-sections -ldl -lm -llog -lc $ENV{LDFLAGS}";
+		$ENV{LDFLAGS} = "-Wl,--no-undefined -Wl,--gc-sections -ldl -lm -llog -lc -Wl,-z,max-page-size=16384 $ENV{LDFLAGS}";
 
 		print "\n";
 		print ">>> Environment:\n";
