@@ -11,7 +11,7 @@ agent:
   flavor: b1.xlarge 
 
 variables:
-  BACKPORT_BRANCH: "2023.3"
+  BACKPORT_BRANCH: "6000.0"
 
 dependencies:
   - .yamato/Publish To Stevedore.yml
@@ -20,7 +20,7 @@ triggers:
   pull_requests:
     - targets:
         only:
-          - "unity-2023.3-mbe"
+          - "unity-6000.0-mbe"
 
 # YAMATO_SOURCE_DIR=C:\build\output\Unity-Technologies\mono (mono repo checkout) - all command steps start in here
 # YAMATO_WORK_DIR=C:\build\output
