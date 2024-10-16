@@ -21,13 +21,13 @@ triggers:
   pull_requests:
     - targets:
         only:
-          - "unity-6000.0-mbe"
+          - "unity-6000.1-mbe"
   branches:
     only:
-      - "unity-6000.0-mbe"
+      - "unity-6000.1-mbe"
   cancel_old_ci: true
   recurring:
-    - branch: unity-6000.0-mbe
+    - branch: unity-6000.1-mbe
       frequency: daily # Should run between midnight and 6AM UTC
 
 artifacts: 
