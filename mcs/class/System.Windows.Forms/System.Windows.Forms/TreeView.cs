@@ -2229,19 +2229,14 @@ namespace System.Windows.Forms {
 			tooltip_currently_showing = null;
 		}
 
-		private ToolTip ToolTipWindow
-		{
-			get
-			{
+		private ToolTip ToolTipWindow {
+			get {
 				if (tooltip_window == null)
-				{
 					tooltip_window = new ToolTip(this);
-				}
-
+				
 				return tooltip_window;
 			}
 		}
-
 		#endregion
 		
 		#endregion	// Internal & Private Methods and Properties

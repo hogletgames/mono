@@ -94,12 +94,9 @@ namespace System.Windows.Forms {
 				} else
 					SetStyle (ControlStyles.Opaque, true);
 
-				if (owner == null)
-				{
+				if (owner == null) {
 					SetTopLevel (true);
-				}
-				else
-				{
+				} else {
 					SetTopLevel (false);
 					owner.Controls.Add(this);
 				}
@@ -321,7 +318,6 @@ namespace System.Windows.Forms {
 			tooltip_window.Draw += new DrawToolTipEventHandler (tooltip_window_Draw);
 			tooltip_window.Popup += new PopupEventHandler (tooltip_window_Popup);
 
-
 			// UIA Framework: Static event handlers
 			tooltip_window.UnPopup += delegate (object sender, PopupEventArgs args) {
 				OnUnPopup (args);
@@ -331,8 +327,8 @@ namespace System.Windows.Forms {
 			timer = new Timer();
 			timer.Enabled = false;
 			timer.Tick +=new EventHandler(timer_Tick);
-		}
 
+		}
 
 
 		#region UIA Framework: Events, Delegates and Methods
