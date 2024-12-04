@@ -2239,7 +2239,7 @@ namespace System.Windows.Forms
 		
 		private int filterIndex = 1;
 		
-		public ToolTip toolTip;
+		private ToolTip toolTip;
 		private int oldItemIndexForToolTip = -1;
 		
 		private ContextMenu contextMenu;

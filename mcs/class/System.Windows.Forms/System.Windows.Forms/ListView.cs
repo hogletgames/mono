@@ -287,6 +287,7 @@ namespace System.Windows.Forms
 
 			v_scroll = new ImplicitVScrollBar ();
 			Controls.AddImplicit (this.v_scroll);
+
 			h_marker = v_marker = 0;
 			keysearch_tickcnt = 0;
 
