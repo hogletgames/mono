@@ -2532,7 +2532,7 @@ static const char locale_strings [] = {
 	"ES\0"
 	"zh-TW\0"
 	"Chinese (Traditional)\0"
-	"\xe4\xb8\xad\xe6\x96\x87 (\xe5\x8f\xb0\xe6\xb9\xbe)\0"
+	"\xe4\xb8\xad\xe6\x96\x87 (\xe5\x8f\xb0\xe7\x81\xa3)\0"
 	"CHT\0"
 	"TW\0"
 	"cs-CZ\0"
