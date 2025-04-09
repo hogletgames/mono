@@ -10377,7 +10377,7 @@ debugger_thread (void *arg)
 
 		/* This will break if the socket is closed during shutdown too */
 		if (res != HEADER_LENGTH) {
-			PRINT_DEBUG_MSG (1, "[dbg] transport_recv () returned %d, expected %d.\n", res, HEADER_LENGTH);
+			PRINT_DEBUG_MSG (1, "[dbg] transport_recv () returned %d, expected %d. -- Malformed command header\n", res, HEADER_LENGTH);
 			command_set = (CommandSet)0;
 			command = 0;
 			dispose_vm ();
@@ -10412,7 +10412,7 @@ debugger_thread (void *arg)
 		{
 			res = transport_recv (data, len - HEADER_LENGTH);
 			if (res != len - HEADER_LENGTH) {
-				PRINT_DEBUG_MSG (1, "[dbg] transport_recv () returned %d, expected %d.\n", res, len - HEADER_LENGTH);
+				PRINT_DEBUG_MSG (1, "[dbg] transport_recv () returned %d, expected %d. -- Malformed command body\n", res, len - HEADER_LENGTH);
 				break;
 			}
 		}
@@ -10523,10 +10523,14 @@ debugger_thread (void *arg)
 	PRINT_DEBUG_MSG (1, "[dbg] Debugger thread exited.\n");
 	
 	if (!attach_failed && command_set == CMD_SET_VM && command == CMD_VM_DISPOSE && !(vm_death_event_sent || mono_runtime_is_shutting_down ())) {
-		PRINT_DEBUG_MSG (2, "[dbg] Detached - restarting clean debugger thread.\n");
+		PRINT_DEBUG_MSG (1, "[dbg] Detached - restarting clean debugger thread.\n");
 		ERROR_DECL (error);
 		start_debugger_thread (error);
 		mono_error_cleanup (error);
+	}
+	else
+	{
+		PRINT_DEBUG_MSG (1, "[dbg] Debugger thread not restarting :: (%d && %d && %d !(%d || %d))\n", (!attach_failed), (command_set == CMD_SET_VM), (command == CMD_VM_DISPOSE), vm_death_event_sent, mono_runtime_is_shutting_down ());
 	}
 
 	return 0;
