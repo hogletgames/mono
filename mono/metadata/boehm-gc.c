@@ -1908,26 +1908,27 @@ mono_gchandle_is_in_domain_internal (MonoGCHandle gch, MonoDomain *domain)
  * \returns TRUE if the object wrapped by the \p gchandle belongs to the specific \p domain.
  */
 gboolean
-mono_gchandle_is_in_domain_internal_unsafe(MonoGCHandle gchandle, MonoDomain* domain)
+mono_gchandle_is_in_domain_internal_unsafe(MonoGCHandle gch, MonoDomain* domain)
 {
-	guint slot = 0;
-	HandleData* handles = handle_lookup(gchandle, &slot);
+	guint32 gchandle = MONO_GC_HANDLE_TO_UINT (gch);
+	guint slot = MONO_GC_HANDLE_SLOT (gchandle);
+	guint type = MONO_GC_HANDLE_TYPE (gchandle);
+	HandleData *handles = &gc_handles [type];
 	gboolean result = FALSE;
 
-	if (handles->type >= HANDLE_TYPE_MAX)
+	if (type >= HANDLE_TYPE_MAX)
 		return FALSE;
 
-	if (slot < handles->size && slot_occupied(handles, slot)) {
-		if (MONO_GC_HANDLE_TYPE_IS_WEAK(handles->type)) {
-			result = domain->domain_id == handles->domain_ids[slot];
-		}
-		else {
-			MonoObject* obj;
-			obj = (MonoObject*)handles->entries[slot];
+	if (slot < handles->size && slot_occupied (handles, slot)) {
+		if (MONO_GC_HANDLE_TYPE_IS_WEAK (handles->type)) {
+			result = domain->domain_id == handles->domain_ids [slot];
+		} else {
+			MonoObject *obj;
+			obj = (MonoObject *)handles->entries [slot];
 			if (obj == NULL)
 				result = TRUE;
 			else
-				result = domain == mono_object_domain(obj);
+				result = domain == mono_object_domain (obj);
 		}
 	}
 
