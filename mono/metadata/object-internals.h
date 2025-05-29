@@ -2381,8 +2381,18 @@ mono_gchandle_get_target_internal (MonoGCHandle gchandle);
 
 void mono_gchandle_free_internal (MonoGCHandle gchandle);
 
+#if HAVE_BOEHM_GC
+void
+mono_gc_handle_lock ();
+
+void
+mono_gc_handle_unlock ();
+#endif
+
 /* make sure the gchandle was allocated for an object in domain */
-gboolean mono_gchandle_is_in_domain_internal(MonoGCHandle gchandle, MonoDomain* domain);
+gboolean mono_gchandle_is_in_domain_internal (MonoGCHandle gchandle, MonoDomain* domain);
+
+gboolean mono_gchandle_is_in_domain_internal_unsafe (MonoGCHandle gchandle, MonoDomain* domain);
 
 /* Reference queue support
  *
