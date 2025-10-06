@@ -7,7 +7,7 @@ name: Run IL2CPP Tests Against This Mono Branch
 
 agent:
   type: Unity::VM
-  image: vm/prtools-windows-vs2019:v1.1.0
+  image: vm/il2cpp-gamecore:v1.1.0
   flavor: b1.xlarge 
 
 variables:
