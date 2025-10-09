@@ -35,6 +35,11 @@ commands:
 
         git clone git@github.cds.internal.unity3d.com:unity/prtools.git
 
+    # Step 1.5 - Set PRTOOLS_BUILD_DIR environment variable
+    - command: |
+        setx PRTOOLS_BUILD_DIR "C:\buildslave\unity"
+        $env:PRTOOLS_BUILD_DIR = "C:\buildslave\unity"
+
     # Step 2 - clone unity/il2cpp into $env:PRTOOLS_BUILD_DIR\il2cpp (C:\buildslave\unity\il2cpp)
     - command: |
         git config --global core.longpaths true
