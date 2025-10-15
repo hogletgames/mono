@@ -35,10 +35,12 @@ commands:
 
         git clone git@github.cds.internal.unity3d.com:unity/prtools.git
 
-    # Step 1.5 - Set PRTOOLS_BUILD_DIR environment variable
+    # Step 1.5 - Set required environment variables
     - command: |
         setx PRTOOLS_BUILD_DIR "C:\buildslave\unity"
+        setx UNITY_SOURCE_PRTOOLS_DIR "C:\buildslave\unity\build"
         $env:PRTOOLS_BUILD_DIR = "C:\buildslave\unity"
+        $env:UNITY_SOURCE_PRTOOLS_DIR = "C:\buildslave\unity\build"
 
     # Step 2 - clone unity/il2cpp into $env:PRTOOLS_BUILD_DIR\il2cpp (C:\buildslave\unity\il2cpp)
     - command: |
